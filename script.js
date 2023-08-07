@@ -13,6 +13,7 @@ let favMoviesList = [];
 !localStorage.getItem('myFavMoviesArray') ? localStorage.setItem('myFavMoviesArray', JSON.stringify([])) : null;
 let myFavMoviesArray = JSON.parse(localStorage.getItem('myFavMoviesArray'));
 
+
 // Finding the Movie with search Keywords
 function findMovies(){
     let searchTerm = (movieSearchBox.value).trim();
@@ -120,6 +121,8 @@ window.addEventListener('click', (event) => {
 });
 
 
+
+
 // Adding movie to the favourites list
 const addToFav = (imdbID) => {
     
@@ -181,7 +184,6 @@ moviesFavList.addEventListener('click', async () => {
 
 // If favourite List has no movie
 function displayEmptyBanner(){
-    console.log("2");
     gridListContainer.insertAdjacentHTML('beforeend', `
         <div class="grid-banner" >
             <h3 class="banner-heading" >No item selected yet.</h3>
