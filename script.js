@@ -1,3 +1,4 @@
+//Initial References for components
 const movieSearchBox = document.getElementById('movie-search-box');
 const searchList = document.getElementById('search-list');
 const resultGrid = document.getElementById('result-grid');
@@ -6,11 +7,22 @@ const gridListContainer = document.getElementById('grid-list-container');
 const cleanFavListBtn = document.getElementById('clean-fav-list-btn');
 const apiKey = "6ebc8537";
 let favMoviesList = [];
-
+ 
 
 // Check if the array exists in localStorage
 !localStorage.getItem('myFavMoviesArray') ? localStorage.setItem('myFavMoviesArray', JSON.stringify([])) : null;
 let myFavMoviesArray = JSON.parse(localStorage.getItem('myFavMoviesArray'));
+
+// Finding the Movie with search Keywords
+function findMovies(){
+    let searchTerm = (movieSearchBox.value).trim();
+    if(searchTerm.length > 0){
+        searchList.classList.remove('hide-search-list');
+        loadMovies(searchTerm);
+    } else {
+        searchList.classList.add('hide-search-list');
+    }
+}
 
 
 // load movies from API
@@ -23,16 +35,6 @@ async function loadMovies(searchTerm){
     if(data.Response == "True") displayMovieList(data.Search);
 }
 
-// Finding the Movie with search Keywords
-function findMovies(){
-    let searchTerm = (movieSearchBox.value).trim();
-    if(searchTerm.length > 0){
-        searchList.classList.remove('hide-search-list');
-        loadMovies(searchTerm);
-    } else {
-        searchList.classList.add('hide-search-list');
-    }
-}
 
 // For display the movies in a search lists
 function displayMovieList(movies){
@@ -63,10 +65,10 @@ function displayMovieList(movies){
 // For choosen movies selection from searches
 function loadMovieDetails(){
     const searchListMovies = searchList.querySelectorAll('.search-list-item');
-    console.log(searchListMovies);
+    
     searchListMovies.forEach(movie => {
         movie.addEventListener('click', async () => {
-            // console.log(movie.dataset.id);
+            // Adding the Class
             searchList.classList.add('hide-search-list');
             movieSearchBox.value = "";
             const result = await fetch(`https://omdbapi.com/?i=${movie.dataset.id}&apikey=${apiKey}`);
@@ -118,7 +120,6 @@ window.addEventListener('click', (event) => {
 });
 
 
-
 // Adding movie to the favourites list
 const addToFav = (imdbID) => {
     
@@ -135,6 +136,7 @@ const addToFav = (imdbID) => {
 
     }else{
 
+        // For Removing selected movie from favourite list
         const indexToRemove = myFavMoviesArray.indexOf(imdbID);
         if (indexToRemove !== -1) {
             myFavMoviesArray.splice(indexToRemove, 1);
@@ -157,7 +159,7 @@ function updateLocalStorageArray(arrVar,arr){
 }
 
 
-// To fetch movies lists from favourite lists
+// view the movies details of selected movie from favourite list
 moviesFavList.addEventListener('click', async () => {
 
     gridListContainer.innerHTML = '';
@@ -177,6 +179,7 @@ moviesFavList.addEventListener('click', async () => {
     }
 });
 
+// If favourite List has no movie
 function displayEmptyBanner(){
     console.log("2");
     gridListContainer.insertAdjacentHTML('beforeend', `
@@ -216,8 +219,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
+// For clean the Favourite list
 cleanFavListBtn.addEventListener('click', async () => {
-
     localStorage.setItem('myFavMoviesArray', JSON.stringify([]));
     gridListContainer.innerHTML = '';
     resultGrid.innerHTML = '';
